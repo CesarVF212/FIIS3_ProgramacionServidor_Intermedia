@@ -1,3 +1,5 @@
+// -- GESTIÓN DE LA SUBIDA A IPFS --- //
+
 const uploadToPinata = async (fileBuffer, filename) => {
     const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
     let data = new FormData();

@@ -1,3 +1,5 @@
+// -- GESTIÓN DE LA VALIDACIÓN DE LOS ERRORES EXPRESS-VALIDATOR --- //
+
 const { validationResult } = require("express-validator");
 
 const validateResults = (req, res, next) => {

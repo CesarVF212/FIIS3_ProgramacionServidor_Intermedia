@@ -41,4 +41,85 @@ const createUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser };
+const getItems = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error(error);
+        return handleHttpError(res, "Error al obtener usuarios", 500);
+    }
+};
+
+// Obtener un usuario por email
+const getItem = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (!user) {
+            return handleHttpError(res, "Usuario no encontrado", 404);
+        }
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        return handleHttpError(res, "Error al obtener usuario", 500);
+    }
+};
+
+// Crear un usuario
+const createItem = createUser; // Ya lo tienes definido
+
+// Actualizar un usuario
+const updateItem = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ email: req.params.email }, req.body, { new: true });
+        if (!user) {
+            return handleHttpError(res, "Usuario no encontrado", 404);
+        }
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        return handleHttpError(res, "Error al actualizar usuario", 500);
+    }
+};
+
+// Eliminar un usuario
+const deleteItem = async (req, res) => {
+    try {
+        const user = await User.findOneAndDelete({ email: req.params.email });
+        if (!user) {
+            return handleHttpError(res, "Usuario no encontrado", 404);
+        }
+        res.json({ message: "Usuario eliminado" });
+    } catch (error) {
+        console.error(error);
+        return handleHttpError(res, "Error al eliminar usuario", 500);
+    }
+};
+
+// Metodo para iniciar sesión.
+const loginUser = async (req, res) => {
+    try {
+
+        const { email, password } = req.body;
+
+        // Busca el usuario en la base de datos
+        const user = await User.findOne({ email });
+        if (!user)
+            return handleHttpError(res, "Usuario no encontrado", 404);
+        
+
+        // Verifica la contraseña
+        const isMatch = user.comparePassword(password);
+        if (!isMatch)
+            return handleHttpError(res, "Contraseña incorrecta", 401);
+        
+
+        res.json({ message: "Inicio de sesión exitoso", user });
+    
+    } catch (error) {
+        console.error(error);
+        return handleHttpError(res, "Error al iniciar sesión", 500);
+    }
+};
+
+module.exports = { getItem, getItems, updateItem, createItem, deleteItem, loginUser };

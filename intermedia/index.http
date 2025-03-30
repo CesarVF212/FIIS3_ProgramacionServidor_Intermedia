@@ -8,11 +8,11 @@ Content-Type: application/json
     "name": "Nuevo",
     "email": "micrreo267@correo.es",
     "age":37,
-    "password": "12345"
+    "password": "12345678"
 }
 
 ###
-PUT http://localhost:3000/api/users/micrreo2@correo.es
+PUT http://localhost:3000/api/users/micrreo267@correo.es
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/api/users/micrreo267@correo.es
+DELETE http://localhost:3000/api/users/micrreo2@correo.es
 Content-Type: application/json
 
 ### utilizando IPFS

@@ -1,3 +1,5 @@
+// --- GESTIÓN DEL ALMACENAMIENTO DE ARCHIVOS --- //
+
 const multer = require("multer");
 
 const storage = multer.diskStorage({

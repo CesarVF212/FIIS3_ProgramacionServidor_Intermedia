@@ -3,7 +3,7 @@ const router = express.Router();
 const {getItem, getItems, updateItem, createItem, deleteItem} = require ('../controllers/users.js')
 const { validatorCreateItem } = require("../validators/users.js");
 const validationMiddleware = require("../middleware/validation/users.js");
-
+const { loginUser } = require('../controllers/users.js');
 
 router.get('/', getItems);
 router.get('/:email', getItem);
@@ -13,5 +13,7 @@ router.put('/:email', (req, res) => {
     updateItem(req, res);
 });
 router.delete('/:email', deleteItem);
+
+router.post("/login", loginUser);
 
 module.exports = router;
