@@ -1,6 +1,5 @@
 const customHeader = (req, res, next) => {
-    //console.log(req.body)
-    //console.log(req.headers)
+
     try {
         const apiKey = req.headers.api_key;
         //if(apiKey === 'ric-01') {
@@ -12,6 +11,7 @@ const customHeader = (req, res, next) => {
     }catch(err) {
         res.status(403).send(err)
     }
+
 }
 
 module.exports = customHeader

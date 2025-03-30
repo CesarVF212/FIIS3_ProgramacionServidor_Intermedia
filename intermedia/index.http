@@ -1,21 +1,50 @@
-POST http://localhost:3000/api/tracks
-Content-Type: application/json
+GET http://localhost:3000/api/users
 
-{
-  "name": "Money",
-  "album": "Dark Side of the Moon",
-  "artist": "Pink Floyd",
-  "duration": 5.5,
-  "cover": "https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png"
-}
-
-####
-
+###
 POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-  "name": "Pedro Perez",
-  "email": "pedro@example.com",
-  "password": "12345678"
+    "name": "Nuevo",
+    "email": "micrreo267@correo.es",
+    "age":37,
+    "password": "12345"
 }
+
+###
+PUT http://localhost:3000/api/users/micrreo2@correo.es
+Content-Type: application/json
+
+{
+    "name": "Marcos",
+    "email": "micrreo2@correo.es",
+    "age":37,
+    "password": "12345",
+    "role": "admin"
+}
+
+###
+DELETE http://localhost:3000/api/users/micrreo267@correo.es
+Content-Type: application/json
+
+### utilizando IPFS
+POST http://localhost:3000/api/storage HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="image"; filename="bici_lago.jpg"
+Content-Type: image/jpeg
+
+< ./bici_lago.jpg
+--boundary123--
+
+
+POST http://localhost:3000/api/storage/local HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="image"; filename="bici_lago.jpg"
+Content-Type: image/jpeg
+
+< ./bici_lago.jpg
+--boundary123--

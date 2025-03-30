@@ -1,6 +1,6 @@
+// --- DEFINE EL MODELO DE LOS USUARIOS ---
+
 const mongoose = require('mongoose')
-
-
 
 const UserScheme = new mongoose.Schema(
 

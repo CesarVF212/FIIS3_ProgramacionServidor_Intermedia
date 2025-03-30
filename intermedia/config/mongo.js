@@ -1,3 +1,5 @@
+// --- CONFIGURACIÓN DE LA CONEXIÓN CON LA BASA DE DATOS MONGODB ---
+
 const mongoose = require('mongoose')
 
 const dbConnect = () => {

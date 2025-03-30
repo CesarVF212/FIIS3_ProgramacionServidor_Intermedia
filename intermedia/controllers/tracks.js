@@ -1,15 +1,14 @@
-const tracksModel = require('../models/tracks');
-const { handleHttpError } = require('../utils/handleError');
-const { matchedData } = require('express-validator');
+// --- DEFINE EL CONTROLADOR PARA MANEJAR LAS OPERACIONES SOBRE LA BASE DE DATOS DE LAS CANCIONES ---
 
-/**
- * Obtener lista de la base de datos
- * @param {*} req 
- * @param {*} res 
- */
+const tracksModel = require('../models/tracks'); // Modelo de las canciones.
+const { handleHttpError } = require('../utils/handleError'); // Arhcivo para manejar errores.
+const { matchedData } = require('express-validator'); // Librería validadora.
+
+
+// Obtiene todos los elementos de la base de datos.
 const getItems = async (req, res) => {
     try {
-        const user = req.user; // Para trazabilidad
+        const user = req.user;
         const data = await tracksModel.find({});
         res.json({ data, user });
     } catch (err) {
@@ -17,11 +16,7 @@ const getItems = async (req, res) => {
     }
 };
 
-/**
- * Obtener un detalle por ID
- * @param {*} req 
- * @param {*} res 
- */
+// Obtiene un elemento de la base de datos.
 const getItem = async (req, res) => {
     try {
         const { id } = matchedData(req); // Extrae solo el id validado
@@ -37,11 +32,7 @@ const getItem = async (req, res) => {
     }
 };
 
-/**
- * Crear un nuevo track
- * @param {*} req 
- * @param {*} res 
- */
+// Crea un nuevo elemento en la base de datos.
 const createItem = async (req, res) => {
     try {
         const body = matchedData(req); // Filtra los datos validados
@@ -52,11 +43,7 @@ const createItem = async (req, res) => {
     }
 };
 
-/**
- * Actualizar un track por ID
- * @param {*} req 
- * @param {*} res 
- */
+// Actualiza un elemento de la base de datos.
 const updateItem = async (req, res) => {
     try {
         const { id, ...body } = matchedData(req); // Extrae ID y el resto de datos
@@ -72,11 +59,7 @@ const updateItem = async (req, res) => {
     }
 };
 
-/**
- * Eliminar un track por ID (Borrado físico o lógico)
- * @param {*} req 
- * @param {*} res 
- */
+// Borrado físico de un elemento.
 const deleteItem = async (req, res) => {
     try {
         const { id } = matchedData(req);

@@ -1,3 +1,5 @@
+// --- DEFINE EL MODELO DEL ARCHIVO GUARDADO ---
+
 const mongoose = require("mongoose")
 
 const StorageScheme = new mongoose.Schema(

@@ -1,8 +1,10 @@
-const { validationResult } = require("express-validator");
-const { handleHttpError } = require("../utils/handleError");
-const User = require("../models/users.js");  // Asegúrate de tener el modelo User
+// --- DEFINE EL CONTROLADOR PARA MANEJAR LAS OPERACIONES SOBRE LA BASE DE DATOS DE USUARIOS ---
 
-// Controlador para la creación de un nuevo usuario
+const { validationResult } = require("express-validator"); // Librería validadora.
+const { handleHttpError } = require("../utils/handleError"); // Archivo para manejar errores.
+const User = require("../models/users.js");  // Modelo de usuarios.
+
+// Creación de un nuevo usuario.
 const createUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
