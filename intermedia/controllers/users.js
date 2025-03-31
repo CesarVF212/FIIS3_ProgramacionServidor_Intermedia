@@ -44,7 +44,29 @@ const createUser = async (req, res) => {
         // Simulación de envío del código por email (debes usar nodemailer en producción)
         console.log(`Código de verificación para ${email}: ${verificationCode}`);
 
-        res.status(201).json({ message: "Usuario creado. Revisa tu email para verificar la cuenta." });
+        const jsonUser = user.toJSON();
+
+        if(jsonUser.jckToken === undefined){
+            jsonUser.jckToken = null;
+        }
+        res.status(201).json({ 
+
+            user: {
+                name: jsonUser.name, 
+                email: jsonUser.email,
+                role: jsonUser.role,
+
+                emailVerification: {
+                    verified: jsonUser.emailVerification.verified,
+                    verificationAttempts: jsonUser.emailVerification.verificationAttempts
+                },
+
+                jwkToken: jsonUser.jckToken,
+
+            },
+            message: "Usuario creado. Revisa tu email para verificar la cuenta." 
+        });
+
     } catch (error) {
         console.error(error);
         return handleHttpError(res, "Error al registrar usuario", 500);
