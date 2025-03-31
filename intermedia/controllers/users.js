@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const jwt = require('jsonwebtoken'); // Para generar el token
-const crypto = require("crypto"); // Para cifrar contraseñas
+const bcrypt = require('bcryptjs');
 const { handleHttpError } = require("../utils/handleError");
 const User = require("../models/users.js");
 

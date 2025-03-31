@@ -1,22 +1,21 @@
-const { handleHttpError } = require("../utils/handleError")
+const { handleHttpError } = require("../utils/handleError");
 
-const checkRol = (roles) => (req, res, next) => { //Doble argumento
-    try{
-        const {user} = req
-        console.log(user);
-        const userRol = user.role
-        console.log(roles);
-        //Comprobamos que el rol del usuario esté en roles
-        const checkValueRol = roles.some(elemento => userRol.includes(elemento));
-        if (!checkValueRol) {
-            handleHttpError(res, "NOT_ALLOWED", 403)
-            return
+const checkRol = (roles) => (req, res, next) => {
+    try {
+        const { user } = req;
+        if (!user) {
+            return handleHttpError(res, "USER_NOT_FOUND", 404);
         }
-        next()
-    }catch(err){
-        console.log(err);
-        handleHttpError(res, "ERROR_PERMISSIONS", 403)
-    }
-}
 
-module.exports = checkRol
+        const userRol = user.role;
+        if (!roles.includes(userRol)) {
+            return handleHttpError(res, "NOT_ALLOWED", 403);
+        }
+
+        next();
+    } catch (err) {
+        return handleHttpError(res, "ERROR_PERMISSIONS", 403);
+    }
+};
+
+module.exports = checkRol;
