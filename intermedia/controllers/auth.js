@@ -1,38 +1,95 @@
-const {matchedData} = require('express-validator')
-const { compare } = require('../utils/handlePassword')
-const { handleHttpError } = require('../utils/handleError')
-const {tokenSign} = require('../utils/handleJwt.js')
-const UsersModel = require('../models/users.js')
+// En auth.js
+const { validatorCreateItem } = require('../validators/users'); 
+const { handleHttpError } = require('../utils/handleError');
+const { sendEmail } = require('../utils/handleEmail');
+const User = require('../models/users');
+const { encrypt } = require('../utils/handlePassword');
 
-const loginUser = async (req, res) => {
-  const body = matchedData(req)
-  
-  const userData = await UsersModel.findOne({email:body.email})
-  console.log("**********************\n", userData);
-  if (compare(body.password, userData.password)) {
-    const data = {
-      token: await tokenSign(userData, process.env.JWT_SECRET),
-      user: userData
+const createUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return handleHttpError(res, errors.array(), 400);
     }
-    res.send(data)
-  } else handleHttpError(res, "AUTHORIZATION_FAIL")
-    
-}
 
-const registerUser = async (req, res) => {
-  req = matchedData(req)
-  const password = await encrypt(req.password)
-  const body = {
-    ...req,
-    password
-  }
-  const userData = await UsersModel.create(body)
-  userData.set("password", undefined, {strict: false})
-  const data = {
-    token: await tokenSign(userData, process.env.JWT_SECRET),
-    user: userData
-  }
-  res.send(data);
+    const { name, email, password } = req.body;
 
-}
-module.exports = {loginUser, registerUser}
+    try {
+        const hashedPassword = await encrypt(password);
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+            emailVerification: { verificationCode, verified: false }
+        });
+
+        await newUser.save();
+
+        // Enviar correo electrónico
+        await sendEmail({
+            to: email,
+            subject: 'Verificación de Email',
+            text: `Tu código de verificación es: ${verificationCode}`
+        });
+
+        res.status(201).json({ user: { name, email, verified: false }, token: tokenSign(newUser) });
+    } catch (error) {
+        handleHttpError(res, "Error al crear el usuario", 500);
+    }
+};
+
+
+// En auth.js
+const verifyEmail = async (req, res) => {
+  const { email, code } = req.body;
+
+  try {
+      const user = await User.findOne({ email });
+      if (!user) return handleHttpError(res, "Usuario no encontrado", 404);
+
+      if (user.emailVerification.verificationCode === code) {
+          user.emailVerification.verified = true;
+          await user.save();
+          res.json({ message: "Email verificado con éxito" });
+      } else {
+          handleHttpError(res, "Código incorrecto", 400);
+      }
+  } catch (error) {
+      handleHttpError(res, "Error al verificar el email", 500);
+  }
+};
+
+// En auth.js
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user || !(await compare(password, user.password))) {
+      return handleHttpError(res, "Credenciales incorrectas", 401);
+  }
+
+  res.json({ user: { email: user.email, role: user.role }, token: tokenSign(user) });
+};
+
+// En users.js
+const updateUser = async (req, res) => {
+  const { name, age } = req.body;
+  const userId = req.user._id; 
+
+  try {
+      await User.findByIdAndUpdate(userId, { name, age }, { new: true });
+      res.json({ message: "Usuario actualizado" });
+  } catch (error) {
+      handleHttpError(res, "Error al actualizar el usuario", 500);
+  }
+};
+
+// En storage.js
+const uploadLogo = async (req, res) => {
+  const userId = req.user._id;
+  const logoUrl = await uploadToPinata(req.file.buffer, req.file.originalname); 
+
+  await User.findByIdAndUpdate(userId, { logo: logoUrl }, { new: true });
+  res.json({ message: "Logo actualizado", logoUrl });
+};

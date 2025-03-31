@@ -20,4 +20,18 @@ router.get('/:email', authMiddleware, getItem);
 router.put('/:email', authMiddleware, updateItem);
 router.delete('/:email', authMiddleware, checkRol(["admin"]), deleteItem);
 
+
+// No he podido implementar esta parte que la tengo en el auth.
+// const { createUser, verifyEmail, loginUser, updateUser, uploadLogo } = require('../controllers/auth');
+
+// // Rutas
+// router.post('/register', validatorCreateItem, createUser);
+// router.post('/verify-email', verifyEmail);
+// router.post('/login', loginUser);
+// router.put('/onboarding', updateUser);
+// router.patch('/logo', uploadLogo);
+
+// module.exports = router;
+
+
 module.exports = router;
