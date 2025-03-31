@@ -5,9 +5,9 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "name": "Nuevo",
-    "email": "micrreo267@correo.es",
-    "age":37,
+    "name": "Cesar Vidal",
+    "email": "grintexnoow@gmail.com",
+    "age":21,
     "password": "12345678"
 }
 
